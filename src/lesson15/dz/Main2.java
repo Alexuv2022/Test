@@ -38,34 +38,6 @@ public class Main2 {
             throw new RuntimeException(e);
         }
     }
-
-    public static void checkProxy(String ip, int port) {
-        System.out.println("Запрос к серверу с " + ip + ":" + port);
-
-        try {
-            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(ip, port));
-            URL url = new URL("https://vozhzhaev.ru/test.php");
-            URLConnection connection = url.openConnection(proxy);
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            System.out.println("ip: " + ip + " port: " + port + " - РАБОТАЕТ!");
-            System.out.println((char) in.read());
-            proxyToFile(ip + ":" + port);
-        } catch (Exception e) {
-            System.out.println("ip: " + ip + " port: " + port + " - АУУ!");
-        }
-    }
-
-    public static void proxyToFile(String result) {
-        try {
-            FileOutputStream fos = new FileOutputStream("C://java/even_proxy.txt", true);
-            String text = result + "\n";
-            byte[] buffer = text.getBytes();
-            fos.write(buffer, 0, buffer.length);
-            System.out.println("The file has been written");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }
 
 class MyThread extends Thread {
@@ -79,6 +51,32 @@ class MyThread extends Thread {
 
     @Override
     public void run() {
-        Main.checkProxy(ip, port);
+        checkProxy(ip, port);
+    }
+    public void checkProxy(String ip, int port) {
+        System.out.println("Запрос к серверу с " + ip + ":" + port);
+
+        try {
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(ip, port));
+            URL url = new URL("https://vozhzhaev.ru/test.php");
+            URLConnection connection = url.openConnection(proxy);
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            System.out.println("ip: " + ip + " port: " + port + " - РАБОТАЕТ!");
+            proxyToFile(ip + ":" + port);
+        } catch (Exception e) {
+            System.out.println("ip: " + ip + " port: " + port + " - Не работает!");
+        }
+    }
+
+    public void proxyToFile(String result) {
+        try {
+            FileOutputStream fos = new FileOutputStream("C://java/even_proxy.txt", true);
+            String text = result + "\n";
+            byte[] buffer = text.getBytes();
+            fos.write(buffer, 0, buffer.length);
+            System.out.println("The file has been written");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
